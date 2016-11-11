@@ -40,7 +40,10 @@ class openstack:
       #self.apiurlt = urlparse(dd['access']['serviceCatalog']['nova'][0]['publicURL'])
       #print 'openstack init complete'
     except Exception as e:
-      raise Exception('openstack init exception: %s' % e)
+      if e == 'access':
+        raise Exception('Openstack Lib init error: bad usernme/password/tenantid')
+      else:
+        raise Exception('openstack init exception: %s' % e)
 
   def logit(self,msg,isobject=False):
     try:

@@ -2,34 +2,36 @@
 import os, base64
 
 ## Set this to turn debugging on
+## If openstack-cli.py isn't working, start here
 debug=False
+
+## ask for credentials on each use
+## the --robot option always turns this off
+confirmation=False
 
 ## Set to a Openstack controller and your password base64 encoded
 ## run at a shell to get the base64 of your password
 ## bash -c 'echo $PASSWORD | base64'
-oshost = "10.152.93.xxx"
+oshost = "10.2.3.456"
 ## we will try to pull these from the environment further down
-username = 'jenkins'
-password = 'amVua2lucwo='
+username = 'my-horizon-username'
+password = 'b3BlbnN0YWNrCg=='
 
 ## Set these to the tenantid's you want to give this cli access to
 ## Notice the naming convention, the tenant name is a prefix. No spaces for the name,  use underscores.
 ## I havent tested using spaces in the name
 ## admin tenant REQUIRED
-admin_tenantid = "3ecd225b344b4d2095xxx"
+admin_tenantid = "a0c308140ed6xxx"
 
 ## others
-infra_eng_tenantid = "3e56d20dd44f4c01xxx"
-sys_eng_tenantid = "2b9f473678f04e1d84fxxx"
-dev_ops_tenantid = "b6c526af850845868b94xxx"
-jenkins_dev_tenantid = "56f9352d169c451b8xxx"
+Masked_Admins_tenantid = "b771d19b71bf4a8ab767xxx"
 
 ## set this to the default tenant id and name
-default_tenantid = admin_tenantid
-default_tenantname = 'admin'
+default_tenantid = Masked_Admins_tenantid
+default_tenantname = 'Masked_Admins'
 
 ## this should match the names above
-os_projects = ['infra_eng','sys_eng','dev_ops','jenkins_dev','admin']
+os_projects = ['Masked_Admins','admin']
 
 ## try to pull from the environment
 ## will work if you source the openrc or keystone file
@@ -42,9 +44,9 @@ tenantname = os.getenv('OS_TENANT_NAME', default_tenantname)
 defaultFlavor = '1'
 
 ## ubuntu 12
-defaultImage = 'ec8369d3-65c7-44a6-a15f-eb443cxxx'
+defaultImage = '57cb666d-8507-4bef-ba2e-e0663d7fe73a'
 defaultSecGroup = 'default'
-defaultSSHKey = 'my-ssh-key-name-in-openstack'
+defaultSSHKey = 'my-openstack-key'
 
 ## migration related
 os_shared_storage="False"

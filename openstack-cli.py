@@ -65,14 +65,17 @@ def oshost_listvms(oshost=options.OSHOST,ask=True,tenantname='infra_eng',doall=F
   at http://developer.openstack.org/api-ref-compute-v2-ext.html
   """
   try:
-    if ask == True:
-      print "You need to have access rights to a project"
-      tenantname = raw_input("Enter project name or all [default] (default %s): " % tenantname)
-      if not tenantname:
+    if options.ROBOT == False and config.confirmation == True:
+      if ask == True:
+        print "You need to have access rights to a project"
+        tenantname = raw_input("Enter project name or accept default (default %s): " % tenantname)
+        if not tenantname:
+          tenantname = 'admin'
+      if tenantname == 'all':
+        doall = True
         tenantname = 'admin'
-    if tenantname == 'all':
-      doall = True
-      tenantname = 'admin'
+    else:
+      tenantname = config.default_tenantname
     try:
       exec("config.tenantid = config.%s_tenantid" % tenantname)
       _openstack=openstack(osuser=config.osuser,ospass=config.ospass,tenantid=config.tenantid,debug=config.debug)
@@ -360,7 +363,7 @@ def server_resetstate(target):
 
 def server_show(target):
     try:
-      #_openstack=login()
+      _openstack=login()
       if not target:
         print "You need to give a server uuid."
       else:
@@ -644,24 +647,27 @@ def list_images():
 
 def login():
   try:
-    import getpass
-    user = raw_input("Hit enter to use config settings.\nUsername [%s]: " % config.osuser)
-    passwd = getpass.getpass()
-    tenantname = raw_input("Project [batch|neo|s2_dev|infra_eng|syseng|devops|jenkinsdev] (default %s: )" % config.tenantname)
-    if user:
-      config.osuser = user
-    if passwd:
-      config.ospass = passwd
-    if not tenantname:
-      tenantname = config.tenantname
-    if tenantname in config.os_projects:
-      try:
-        exec("config.tenantid = config.%s_tenantid" % tenantname)
-      except Exception as e:
-        raise Exception("Could not configure tenantname %s add credentials to the config_openstack.py file, exception: %s" % (tenantname,e))
+    if options.ROBOT == False and config.confirmation == True:
+      import getpass
+      user = raw_input("Hit enter to use config settings.\nUsername [%s]: " % config.osuser)
+      passwd = getpass.getpass()
+      tenantname = raw_input("Enter project name or accept default (default %s): " % config.default_tenantname)
+      if user:
+        config.osuser = user
+      if passwd:
+        config.ospass = passwd
+      if not tenantname:
+        tenantname = config.tenantname
+      if tenantname in config.os_projects:
+        try:
+          exec("config.tenantid = config.%s_tenantid" % tenantname)
+        except Exception as e:
+          raise Exception("Could not configure tenantname %s add credentials to the config_openstack.py file, exception: %s" % (tenantname,e))
+      else:
+        raise Exception("Unknown tenantname '%s' add credentials to the config_openstack.py file" % tenantname)
+      return openstack(osuser=config.osuser,ospass=config.ospass,tenantid=config.tenantid,debug=config.debug)
     else:
-      raise Exception("Unknown tenantname '%s' add credentials to the config_openstack.py file" % tenantname)
-    return openstack(osuser=config.osuser,ospass=config.ospass,tenantid=config.tenantid,debug=config.debug)
+      return openstack(osuser=config.osuser,ospass=config.ospass,tenantid=config.tenantid,debug=config.debug)
   except Exception as e:
     raise Exception("Exception in login: %s" % e)
 
@@ -740,9 +746,8 @@ def mainloop():
         sys.exit(1)
       else:
         hypervisor_livemigrateoff()
-  elif options.SNAPS or options.SNAP or options.SNAPTARGET:
-    if options.SNAPS:
-      list_snapshots()
+  elif options.SNAPS:
+    list_snapshots()
   else:
     print "I need something to do, use -h for help."
     sys.exit(1)
