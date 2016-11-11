@@ -3,7 +3,8 @@ This is a python based wrapper I made for the Juno Openstack API.
 
 Use this if you have openstack and want to control it via the commandline, but don't want to install the binaries or use the dashboard.
 
-```
+All you need to do is update the **config-openstack.py** file with your Openstack credentials, or simply source your openrc file. The script tries to pull your creds from the environment.
+```Shell
 [projectsdir]$ git clone https://github.com/syspimp/openstack-api-wrapper
 Cloning into 'openstack-api-wrapper'...
 remote: Counting objects: 3, done.
