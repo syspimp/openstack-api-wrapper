@@ -3,6 +3,7 @@ This is a python based wrapper I made for the Juno Openstack API.
 
 Use this if you have openstack and want to control it via the commandline, but don't want to install the binaries or use the dashboard.
 
+```
 [projectsdir]$ git clone https://github.com/syspimp/openstack-api-wrapper
 Cloning into 'openstack-api-wrapper'...
 remote: Counting objects: 3, done.
@@ -76,4 +77,4 @@ Options:
                         Default is x86_64
   -u UUID, --uuid=UUID  uuid to use
   -n NAME, --name=NAME  Server name to use
-
+```
