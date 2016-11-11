@@ -1,0 +1,52 @@
+## config file for openstack cli
+import os, base64
+
+## Set this to turn debugging on
+debug=False
+
+## Set to a Openstack controller and your password base64 encoded
+## run at a shell to get the base64 of your password
+## bash -c 'echo $PASSWORD | base64'
+oshost = "10.152.93.xxx"
+## we will try to pull these from the environment further down
+username = 'jenkins'
+password = 'amVua2lucwo='
+
+## Set these to the tenantid's you want to give this cli access to
+## Notice the naming convention, the tenant name is a prefix. No spaces for the name,  use underscores.
+## I havent tested using spaces in the name
+## admin tenant REQUIRED
+admin_tenantid = "3ecd225b344b4d2095xxx"
+
+## others
+infra_eng_tenantid = "3e56d20dd44f4c01xxx"
+sys_eng_tenantid = "2b9f473678f04e1d84fxxx"
+dev_ops_tenantid = "b6c526af850845868b94xxx"
+jenkins_dev_tenantid = "56f9352d169c451b8xxx"
+
+## set this to the default tenant id and name
+default_tenantid = admin_tenantid
+default_tenantname = 'admin'
+
+## this should match the names above
+os_projects = ['infra_eng','sys_eng','dev_ops','jenkins_dev','admin']
+
+## try to pull from the environment
+## will work if you source the openrc or keystone file
+osuser = os.getenv('OS_USERNAME', username)
+ospass = os.getenv('OS_PASSWORD', base64.b64decode(password).strip())
+tenantid = os.getenv('OS_TENANT_ID', default_tenantid)
+tenantname = os.getenv('OS_TENANT_NAME', default_tenantname)
+
+## m1.tiny
+defaultFlavor = '1'
+
+## ubuntu 12
+defaultImage = 'ec8369d3-65c7-44a6-a15f-eb443cxxx'
+defaultSecGroup = 'default'
+defaultSSHKey = 'my-ssh-key-name-in-openstack'
+
+## migration related
+os_shared_storage="False"
+os_disk_over_commit="False"
+os_block_migration="True"
